@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>WinaX VIP Club | Elite Forex & Synthetic Signals</title>
+  <!-- Google Fonts & Simple CSS Reset -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0c12;
+      color: #eef2ff;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* gold, blue, green, black, white palette */
+    :root {
+      --gold: #f5b042;
+      --gold-dark: #d98e2b;
+      --blue-accent: #1e88e5;
+      --blue-deep: #0f2b3d;
+      --green-success: #2ecc71;
+      --green-mint: #27ae60;
+      --black-bg: #0a0c12;
+      --card-bg: #11141c;
+      --white-text: #f8fafc;
+      --gray-muted: #94a3b8;
+      --border-glow: rgba(245, 176, 66, 0.25);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* header / hero */
+    .hero {
+      text-align: center;
+      padding: 60px 0 40px;
+      border-bottom: 1px solid rgba(245, 176, 66, 0.2);
+    }
+
+    .logo {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #f5b042 0%, #f0c45a 40%, #ffffff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      color: var(--gray-muted);
+      margin-top: 12px;
+      font-weight: 400;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: #cbd5e6;
+      background: rgba(30, 136, 229, 0.12);
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 40px;
+      margin-top: 20px;
+      backdrop-filter: blur(2px);
+    }
+
+    /* section titles */
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 50px 0 28px 0;
+      text-align: center;
+      background: linear-gradient(120deg, #fff, var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .section-sub {
+      text-align: center;
+      color: var(--gray-muted);
+      margin-bottom: 32px;
+    }
+
+    /* broker cards grid */
+    .broker-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 28px;
+      margin: 30px 0 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 32px;
+      padding: 1.6rem;
+      border: 1px solid rgba(245, 176, 66, 0.25);
+      transition: all 0.25s ease;
+      box-shadow: 0 20px 30px -15px rgba(0, 0, 0, 0.4);
+    }
+
+    .card:hover {
+      border-color: var(--gold);
+      transform: translateY(-5px);
+      box-shadow: 0 25px 35px -12px rgba(245, 176, 66, 0.15);
+    }
+
+    .broker-name {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gold);
+    }
+
+    .instruments {
+      font-size: 0.85rem;
+      background: rgba(30, 136, 229, 0.2);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 30px;
+      margin-bottom: 20px;
+      color: #bbd4ff;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin: 15px 0;
+    }
+
+    .feature-list li {
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #cfdfed;
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      color: var(--green-success);
+      font-weight: bold;
+    }
+
+    .btn-broker {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      background: linear-gradient(95deg, #1e293b, #0f172a);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-weight: 700;
+      padding: 12px 0;
+      border-radius: 60px;
+      text-decoration: none;
+      margin-top: 20px;
+      transition: 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .btn-broker:hover {
+      background: var(--gold);
+      color: #0a0c12;
+      border-color: var(--gold);
+      box-shadow: 0 0 12px rgba(245, 176, 66, 0.5);
+    }
+
+    /* VIP benefits section */
+    .benefits-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin: 30px 0 40px;
+    }
+
+    .benefit-item {
+      background: rgba(17, 20, 28, 0.8);
+      backdrop-filter: blur(4px);
+      padding: 20px 28px;
+      border-radius: 48px;
+      border-left: 4px solid var(--gold);
+      font-weight: 600;
+    }
+
+    /* form styling */
+    .form-card {
+      background: var(--card-bg);
+      border-radius: 40px;
+      padding: 2rem 2rem;
+      margin: 40px 0;
+      border: 1px solid rgba(245, 176, 66, 0.3);
+      box-shadow: 0 20px 35px -12px black;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 18px;
+      background: #0f1119;
+      border: 1px solid #2d3748;
+      border-radius: 28px;
+      color: white;
+      font-size: 1rem;
+      transition: 0.2s;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(245, 176, 66, 0.2);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .checkbox-group input {
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      accent-color: var(--gold);
+    }
+
+    .btn-submit {
+      background: linear-gradient(95deg, var(--gold-dark), var(--gold));
+      border: none;
+      padding: 14px 24px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      border-radius: 60px;
+      color: #0a0c12;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    .btn-submit:hover {
+      transform: scale(0.98);
+      background: var(--gold);
+      box-shadow: 0 0 15px rgba(245, 176, 66, 0.5);
+    }
+
+    /* XM instruction badge */
+    .xm-note {
+      background: #10212e;
+      border-left: 4px solid #1e88e5;
+      padding: 14px 20px;
+      border-radius: 24px;
+      margin-top: 16px;
+      font-size: 0.85rem;
+    }
+
+    .xm-note strong {
+      color: #5dade2;
+    }
+
+    /* modal popup */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-card {
+      background: #11161f;
+      max-width: 500px;
+      width: 90%;
+      border-radius: 48px;
+      padding: 32px 28px;
+      text-align: center;
+      border: 1px solid var(--gold);
+      box-shadow: 0 30px 40px rgba(0,0,0,0.5);
+    }
+
+    .modal-card h3 {
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .verif-message-box {
+      background: #0a0c12;
+      padding: 18px;
+      border-radius: 28px;
+      margin: 20px 0;
+      font-family: monospace;
+      font-size: 1rem;
+      word-break: break-word;
+      border: 1px dashed var(--gold);
+      color: #f5e2b0;
+    }
+
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #25D366;
+      color: #0a0c12;
+      padding: 14px 28px;
+      border-radius: 60px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 16px 0;
+      transition: 0.2s;
+    }
+
+    .close-modal {
+      background: transparent;
+      border: 1px solid gray;
+      padding: 8px 20px;
+      border-radius: 40px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px 0 30px;
+      border-top: 1px solid rgba(245, 176, 66, 0.2);
+      margin-top: 40px;
+      font-size: 0.75rem;
+      color: #7e8aa2;
+    }
+
+    @media (max-width: 680px) {
+      .container {
+        padding: 0 16px;
+      }
+      .broker-name {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Hero section -->
+  <div class="hero">
+    <div class="logo">🏆 WinaX VIP Club</div>
+    <div class="tagline">Elite Signals • 24/7 Markets • High-Profit Setups</div>
+    <div class="hero-sub">📊 3–12 Accurate Signals Weekly | 24/7 Dedicated Support</div>
+  </div>
+
+  <!-- Broker Cards with IB links -->
+  <div class="section-title">⚡ Trade With Trusted Partners</div>
+  <div class="section-sub">Register via our IB links & get access to exclusive VIP signals</div>
+  <div class="broker-grid">
+    <!-- Deriv -->
+    <div class="card">
+      <div class="broker-name">Deriv</div>
+      <div class="instruments">Forex • Gold • Synthetic Indices 24/7</div>
+      <ul class="feature-list">
+        <li>Boom & Crash, Volatility Index</li>
+        <li>MT5 support, low spreads</li>
+      </ul>
+      <a href="https://track.deriv.com/_OmyJhs4k4vL1k0YPxVS0A2Nd7ZgqdRLk/1/" target="_blank" class="btn-broker">Sign Up → Deriv</a>
+    </div>
+    <!-- XM Global -->
+    <div class="card">
+      <div class="broker-name">XM Global</div>
+      <div class="instruments">Forex • Gold • Major Pairs</div>
+      <ul class="feature-list">
+        <li>MT4/MT5, fast execution</li>
+        <li>Use Partner Code: <strong style="color:#f5b042">2JTDV</strong></li>
+      </ul>
+      <a href="https://affs.click/ree2T" target="_blank" class="btn-broker">Sign Up → XM</a>
+    </div>
+    <!-- Exness -->
+    <div class="card">
+      <div class="broker-name">Exness</div>
+      <div class="instruments">Forex • Gold • Crypto</div>
+      <ul class="feature-list"><li>Ultra-low spreads, unlimited leverage</li><li>Trusted global broker</li></ul>
+      <a href="https://one.exnesstrack.org/a/plds1gh2vg" target="_blank" class="btn-broker">Sign Up → Exness</a>
+    </div>
+    <!-- Grand Capital -->
+    <div class="card">
+      <div class="broker-name">Grand Capital</div>
+      <div class="instruments">Forex • Gold • Stocks</div>
+      <ul class="feature-list"><li>Bonus programs, copy trading</li><li>MT4/MT5 available</li></ul>
+      <a href="https://grandcapital.net/?partner_id=6116750" target="_blank" class="btn-broker">Sign Up → Grand Capital</a>
+    </div>
+    <!-- Weltrade -->
+    <div class="card">
+      <div class="broker-name">Weltrade</div>
+      <div class="instruments">FX Vol, FlipX, GainX Synthetic</div>
+      <ul class="feature-list"><li>Synthetic indices 24/7</li><li>No weekend gaps</li></ul>
+      <a href="https://track.gowt.me/visit/?bta=42373&brand=weltrade" target="_blank" class="btn-broker">Sign Up → Weltrade</a>
+    </div>
+  </div>
+
+  <!-- XM Special instruction -->
+  <div class="xm-note">
+    💡 <strong>For existing XM users:</strong> If you already have an XM account, simply register a new MT4/MT5 trading account under your main profile and apply partner code <strong>2JTDV</strong>. Your new account will be automatically tagged under our IB – you'll enjoy full VIP access!
+  </div>
+
+  <!-- VIP Benefits Section -->
+  <div class="section-title">✨ VIP Club Benefits</div>
+  <div class="benefits-grid">
+    <div class="benefit-item">🎯 3–12 Accurate Signals / Week</div>
+    <div class="benefit-item">📡 Real-time Entry, SL, TP Levels</div>
+    <div class="benefit-item">📞 24/7 Priority Support</div>
+    <div class="benefit-item">📈 Risk & Money Management Tips</div>
+    <div class="benefit-item">📊 Weekly Market Recap & Analysis</div>
+    <div class="benefit-item">🔓 Never Miss a Setup</div>
+  </div>
+
+  <!-- VIP Registration Form -->
+  <div class="section-title">📋 Activate VIP Access</div>
+  <div class="section-sub">Fill the form, submit, then send auto-generated WhatsApp message to join private group</div>
+
+  <div class="form-card">
+    <form id="vipForm">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="fullName" placeholder="John Doe" required>
+      </div>
+      <div class="form-group">
+        <label>WhatsApp Number (with country code) *</label>
+        <input type="tel" id="whatsapp" placeholder="+264815562858" required>
+        <small style="color:#8a99b0;">Make sure you have saved +264815562858 in your contacts.</small>
+      </div>
+      <div class="form-group">
+        <label>Choose Broker for Signals *</label>
+        <select id="brokerSelect" required>
+          <option value="" disabled selected>-- Select your broker --</option>
+          <option value="Deriv">Deriv (Forex, Gold, Synthetic Indices)</option>
+          <option value="XM Global">XM Global (Forex, Gold)</option>
+          <option value="Exness">Exness (Forex, Gold)</option>
+          <option value="Grand Capital">Grand Capital (Forex, Gold)</option>
+          <option value="Weltrade">Weltrade (Synthetic Indices)</option>
+        </select>
+      </div>
+      <div class="form-group" id="mt5Group" style="display: none;">
+        <label id="mt5Label">MT5 / Trading Account Number *</label>
+        <input type="text" id="mt5Account" placeholder="Enter your trading account number">
+        <small>For verification only — we do NOT access your account.</small>
+      </div>
+
+      <!-- privacy reassurance checkbox -->
+      <div class="checkbox-group">
+        <input type="checkbox" id="privacyConsent" required>
+        <label for="privacyConsent" style="font-weight: normal; font-size: 0.85rem;">I understand that my MT5/Account number will only be used for verification purposes. WinaX VIP Club does NOT have access to my trading accounts or funds. ✅</label>
+      </div>
+
+      <button type="submit" class="btn-submit">🚀 Register & Generate Verification</button>
+    </form>
+    <div id="formStatus" style="margin-top: 15px; text-align: center; font-size: 0.85rem;"></div>
+  </div>
+
+  <!-- risk disclaimer footer (will appear also in footer) -->
+  <div class="footer">
+    <p><strong>Risk Disclaimer:</strong> Trading Forex, Gold, and Synthetic Indices involves substantial risk of loss and is not suitable for all investors. Past performance does not guarantee future results. Only trade with risk capital. WinaX VIP Club provides educational signals and does not guarantee profits.</p>
+    <p style="margin-top: 12px;">© 2025 WinaX VIP Club — Signals for serious traders. 📞 WhatsApp: +264815562858</p>
+  </div>
+</div>
+
+<!-- Modal Popup for WhatsApp message -->
+<div id="verificationModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3>✅ Almost there!</h3>
+    <p>Your VIP registration has been recorded. To join the private WhatsApp group, please send the verification message below:</p>
+    <div class="verif-message-box" id="generatedMessage">Verify Deriv MT5 123456 for VIP signals</div>
+    <a id="whatsappLink" href="https://wa.me/264815562858?text=" target="_blank" class="whatsapp-btn">📱 Send WhatsApp Message →</a>
+    <p style="font-size: 12px; margin-top: 8px;">🔔 Ensure you have saved <strong>+264815562858</strong> in your phone contacts.</p>
+    <button class="close-modal" id="closeModalBtn">Close</button>
+  </div>
+</div>
+
+<script>
+  // Google Sheets Integration via fetch to Apps Script Web App (replace with your deployed URL later)
+  // We'll build the full logic: first store data, then show modal.
+  // For now we include demo fetch + you will replace SCRIPT_URL with your Google Apps Script URL after deployment.
+  // The script will accept POST and log to sheet.
+  
+  // *** IMPORTANT: Replace this URL with your actual Google Apps Script Web App URL ***
+  const GOOGLE_SHEETS_API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_ID/exec"; 
+  // After deploying, replace above string. We'll add instructions in comments.
+  
+  const form = document.getElementById('vipForm');
+  const brokerSelect = document.getElementById('brokerSelect');
+  const mt5Group = document.getElementById('mt5Group');
+  const mt5AccountInput = document.getElementById('mt5Account');
+  const mt5Label = document.getElementById('mt5Label');
+  const modal = document.getElementById('verificationModal');
+  const generatedMsgSpan = document.getElementById('generatedMessage');
+  const whatsappLink = document.getElementById('whatsappLink');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const formStatusDiv = document.getElementById('formStatus');
+
+  // Show MT5 field dynamically based on broker selection
+  function updateMt5Field() {
+    const broker = brokerSelect.value;
+    if (broker) {
+      mt5Group.style.display = 'block';
+      if (broker === "Deriv") mt5Label.innerText = "Deriv MT5 Account Number *";
+      else if (broker === "XM Global") mt5Label.innerText = "XM MT4/MT5 Account Number *";
+      else if (broker === "Exness") mt5Label.innerText = "Exness MT4/MT5 Account Number *";
+      else if (broker === "Grand Capital") mt5Label.innerText = "Grand Capital Account Number *";
+      else if (broker === "Weltrade") mt5Label.innerText = "Weltrade Account Number *";
+      else mt5Label.innerText = "Trading Account Number *";
+    } else {
+      mt5Group.style.display = 'none';
+    }
+  }
+  brokerSelect.addEventListener('change', updateMt5Field);
+
+  // Helper to generate WhatsApp message
+  function generateWhatsAppMessage(broker, accountNumber, fullName) {
+    // Format: "Verify [Broker] MT5 [account] for VIP signals"
+    let brokerPrefix = broker;
+    if (broker === "XM Global") brokerPrefix = "XM";
+    if (broker === "Grand Capital") brokerPrefix = "GrandCapital";
+    return `Verify ${brokerPrefix} ${accountNumber} for VIP signals`;
+  }
+
+  // Function to submit data to Google Sheets (will use fetch)
+  async function saveToGoogleSheets(formDataObj) {
+    if (GOOGLE_SHEETS_API_URL.includes("YOUR_DEPLOYED_SCRIPT_ID")) {
+      console.warn("Google Sheets URL not configured. Data will be logged to console only.");
+      console.log("Form Data:", formDataObj);
+      // Fake success for demo purposes (so user experience not blocked)
+      return { success: true, demo: true };
+    }
+    try {
+      const response = await fetch(GOOGLE_SHEETS_API_URL, {
+        method: 'POST',
+        mode: 'no-cors', // simpler for Apps Script; but we handle as no-cors, we assume success
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formDataObj)
+      });
+      // With no-cors we can't read response, optimistic
+      return { success: true };
+    } catch (err) {
+      console.error("Sheet save error", err);
+      return { success: false, error: err };
+    }
+  }
+
+  // Show modal with generated message
+  function showVerificationModal(broker, accountNumber, fullName, whatsappNumber) {
+    const verificationText = generateWhatsAppMessage(broker, accountNumber, fullName);
+    generatedMsgSpan.innerText = verificationText;
+    // encode message for WhatsApp
+    const encodedMsg = encodeURIComponent(verificationText);
+    whatsappLink.href = `https://wa.me/264815562858?text=${encodedMsg}`;
+    modal.classList.add('active');
+  }
+
+  // Handle form submission
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    formStatusDiv.innerHTML = "Processing...";
+
+    // Get values
+    const fullName = document.getElementById('fullName').value.trim();
+    const whatsappNum = document.getElementById('whatsapp').value.trim();
+    const broker = brokerSelect.value;
+    let mt5Account = mt5AccountInput.value.trim();
+    const privacyChecked = document.getElementById('privacyConsent').checked;
+
+    if (!fullName || !whatsappNum || !broker) {
+      formStatusDiv.innerHTML = "❌ Please fill all required fields (Name, WhatsApp, Broker).";
+      return;
+    }
+    if (!privacyChecked) {
+      formStatusDiv.innerHTML = "⚠️ You must agree to the privacy verification terms.";
+      return;
+    }
+    if (!mt5Account && broker) {
+      formStatusDiv.innerHTML = "⚠️ Please enter your trading account number (MT5/MT4 ID).";
+      return;
+    }
+
+    // Prepare payload for Google Sheets
+    const timestamp = new Date().toISOString();
+    const payload = {
+      timestamp: timestamp,
+      fullName: fullName,
+      whatsapp: whatsappNum,
+      broker: broker,
+      mt5Account: mt5Account,
+      consent: "yes"
+    };
+
+    // Save to Google Sheets (if configured)
+    const saveResult = await saveToGoogleSheets(payload);
+    if (saveResult.success === false) {
+      formStatusDiv.innerHTML = "⚠️ Data saved locally but sheet error. Please still send WhatsApp message.";
+    } else {
+      formStatusDiv.innerHTML = "✅ Registration recorded!";
+    }
+
+    // Reset form status after short delay and show modal
+    setTimeout(() => { formStatusDiv.innerHTML = ""; }, 2000);
+    
+    // Show modal with pre-filled WhatsApp verification message
+    showVerificationModal(broker, mt5Account, fullName, whatsappNum);
+    
+    // Optional: reset form? we avoid resetting because they might want to see modal.
+    // but we keep it filled for now. no forced reset.
+  });
+
+  // Close modal functionality
+  closeModalBtn.addEventListener('click', () => {
+    modal.classList.remove('active');
+  });
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.remove('active');
+  });
+
+  // initial field state
+  updateMt5Field();
+
+  // Additional note: Google Sheets Setup Instructions are provided in HTML comments
+  console.log("WinaX VIP Club ready — form + modal + conditional fields + IB links active");
+</script>
+
+<!-- ========== GOOGLE SHEETS SETUP INSTRUCTIONS ========== -->
+<!-- 
+  1. Create a Google Sheet, open Apps Script Editor.
+  2. Paste the following code, deploy as Web App (Execute as "Me", Access "Anyone").
+  3. Copy the Web App URL and replace YOUR_DEPLOYED_SCRIPT_ID in the GOOGLE_SHEETS_API_URL variable above.
+
+  APPS SCRIPT CODE (copy this):
+  
+  function doPost(e) {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    sheet.appendRow([new Date(), data.fullName, data.whatsapp, data.broker, data.mt5Account, data.consent]);
+    return ContentService.createTextOutput("success");
+  }
+  
+  // Also add doGet for testing.
+-->
+</body>
+</html>
