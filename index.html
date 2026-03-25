@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ChainReferral | USDT TRC-20 Referral System</title>
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Inter + Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- QRCode.js for generating referral QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a0c12 0%, #0f1119 100%);
+            font-family: 'Inter', sans-serif;
+            color: #eef2ff;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header + brand */
+        .brand {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 1rem;
+        }
+        .logo h1 {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 600;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #F5B042, #FFDD88);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .logo p {
+            font-size: 0.8rem;
+            color: #8B92B0;
+        }
+        .trc-badge {
+            background: #1e2a3a;
+            padding: 0.4rem 1rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid #2c3e44;
+        }
+        .trc-badge i {
+            color: #F5B042;
+            margin-right: 6px;
+        }
+
+        /* dashboard cards grid */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.2rem;
+        }
+
+        .card {
+            background: rgba(18, 22, 35, 0.8);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            padding: 1.6rem;
+            border: 1px solid rgba(255,215,100,0.2);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+            transition: 0.2s;
+        }
+        .card:hover {
+            border-color: rgba(245,176,66,0.5);
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-left: 3px solid #F5B042;
+            padding-left: 0.8rem;
+        }
+        .amount {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FFE6B3;
+        }
+        .usdt-label {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #b9c3e6;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #F5B042;
+            border: none;
+            padding: 0.8rem 1.3rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #0c0f1c;
+            margin-top: 1rem;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #F5B042;
+            color: #F5B042;
+        }
+        .btn-outline:hover {
+            background: rgba(245,176,66,0.1);
+        }
+        .btn-primary {
+            background: #F5B042;
+            color: #0f1119;
+        }
+        .btn-primary:hover {
+            background: #e2a136;
+            transform: scale(0.97);
+        }
+        input, textarea {
+            width: 100%;
+            background: #0b0e18;
+            border: 1px solid #2a2f42;
+            border-radius: 1.5rem;
+            padding: 0.8rem 1rem;
+            color: white;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            font-family: monospace;
+        }
+        input:focus {
+            outline: none;
+            border-color: #F5B042;
+        }
+        .referral-link-box {
+            background: #0b0e18;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin: 1rem 0;
+        }
+        .copy-btn {
+            background: #2a2f42;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .tree-level {
+            background: rgba(0,0,0,0.3);
+            border-radius: 1.2rem;
+            padding: 0.8rem;
+            margin-top: 0.6rem;
+        }
+        .level-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #2a2f42;
+        }
+        .warning {
+            color: #ffb347;
+            font-size: 0.8rem;
+            margin-top: 0.6rem;
+        }
+        .footer-note {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #5e6785;
+            margin-top: 2rem;
+        }
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        #qrcode img {
+            background: white;
+            padding: 6px;
+            border-radius: 16px;
+            width: 110px;
+        }
+        @media (max-width: 680px) {
+            body { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="brand">
+        <div class="logo">
+            <h1><i class="fas fa-link"></i> REFER•TRC</h1>
+            <p>USDT-TRC20 • Multi‑level rewards</p>
+        </div>
+        <div class="trc-badge"><i class="fab fa-tron"></i> TRC-20 network | USDT</div>
+    </div>
+
+    <!-- main grid: left (user panel) + right (stats & referrals) -->
+    <div class="grid-2col">
+        <!-- Left: Registration / Join -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-user-plus"></i> Join network</div>
+            <div style="margin-bottom: 1rem;">
+                <label>🔑 Member ID (your wallet address or nickname)</label>
+                <input type="text" id="memberId" placeholder="e.g., TRx... or coolname" autocomplete="off">
+                <div class="warning"><i class="fas fa-info-circle"></i> Use unique ID. First join costs $10 USDT (simulated).</div>
+            </div>
+            <div>
+                <label>👤 Referred by (optional, leave empty if no sponsor)</label>
+                <input type="text" id="sponsorId" placeholder="Sponsor ID">
+            </div>
+            <button id="joinBtn" class="btn btn-primary"><i class="fas fa-check-circle"></i> Join with $10 USDT</button>
+            <div id="joinMessage" class="warning" style="margin-top: 12px;"></div>
+        </div>
+
+        <!-- Right: Dashboard & referral stats -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-chart-line"></i> My earnings (USDT)</div>
+            <div><span class="amount" id="totalEarnings">0.00</span> <span class="usdt-label">USDT</span></div>
+            <div style="margin-top: 12px;">
+                <div>💰 Level 1 (direct): <strong id="l1Earn">0.00</strong> USDT</div>
+                <div>🌟 Level 2 (indirect): <strong id="l2Earn">0.00</strong> USDT</div>
+            </div>
+            <hr style="margin: 1rem 0; border-color:#2a2f42;">
+            <div class="card-title" style="margin-top:0"><i class="fas fa-tree"></i> My referral network</div>
+            <div>👥 Direct referrals: <strong id="directCount">0</strong></div>
+            <div>🌿 Second-level referrals: <strong id="secondCount">0</strong></div>
+        </div>
+    </div>
+
+    <!-- referral link & QR + actions -->
+    <div class="grid-2col">
+        <div class="card">
+            <div class="card-title"><i class="fas fa-share-alt"></i> Your referral link</div>
+            <div id="activeMemberDisplay" style="font-size:0.85rem; margin-bottom:8px;">🔒 Not logged in. Join first.</div>
+            <div class="referral-link-box" id="refLinkBox">
+                <input type="text" id="referralUrl" readonly value="Join to generate link">
+                <div class="copy-btn" id="copyLinkBtn"><i class="far fa-copy"></i> Copy</div>
+            </div>
+            <div class="qr-container" id="qrCodeContainer">
+                <div id="qrcode"></div>
+            </div>
+            <div class="warning"><i class="fab fa-tron"></i> Share link: each direct referral pays $5, second-level pays $2.5 (USDT-TRC20).</div>
+        </div>
+        <div class="card">
+            <div class="card-title"><i class="fas fa-history"></i> Recent activity (mock)</div>
+            <div id="activityFeed" style="font-size:0.8rem; max-height: 180px; overflow-y: auto;">
+                <div style="color:#5e6785;">💡 Join with USDT-TRC20, then share your link.</div>
+                <div style="color:#5e6785;">🔁 2-level deep rewards: $5 + $2.5.</div>
+            </div>
+            <button id="resetDemoBtn" class="btn-outline btn" style="margin-top: 1rem;"><i class="fas fa-database"></i> Reset demo data</button>
+        </div>
+    </div>
+    <div class="footer-note">
+        ⚡ USDT-TRC20 simulation — real on-chain integration requires wallet connection (TronLink). This demo stores referral tree locally.
+        Each member must "join" with $10 (simulated) to activate rewards.
+    </div>
+</div>
+
+<script>
+    // ------------------- STORAGE KEYS -------------------
+    const STORAGE_MEMBERS = "refsys_members";     // object: id -> { sponsorId, directRefs, totalEarned, level1Earned, level2Earned, joinTimestamp }
+    const STORAGE_ACTIVE = "refsys_activeId";
+
+    // Rewards structure:
+    // - joining cost: $10 (simulated) paid by member, not part of earnings but mandatory to be active.
+    // - For each direct referral (level1): referrer earns $5 USDT
+    // - For each second-level referral (referral of direct): referrer earns $2.5 USDT
+    // earnings are added to referrer's balance (level1Earned, level2Earned, totalEarned)
+
+    // Helper: initialize storage if empty
+    function initStorage() {
+        if (!localStorage.getItem(STORAGE_MEMBERS)) {
+            // seed some example data? maybe empty
+            localStorage.setItem(STORAGE_MEMBERS, JSON.stringify({}));
+        }
+        if (!localStorage.getItem(STORAGE_ACTIVE)) {
+            localStorage.setItem(STORAGE_ACTIVE, "");
+        }
+    }
+
+    // get all members
+    function getMembers() {
+        return JSON.parse(localStorage.getItem(STORAGE_MEMBERS)) || {};
+    }
+
+    function saveMembers(members) {
+        localStorage.setItem(STORAGE_MEMBERS, JSON.stringify(members));
+    }
+
+    function getActiveId() {
+        return localStorage.getItem(STORAGE_ACTIVE) || "";
+    }
+
+    function setActiveId(id) {
+        localStorage.setItem(STORAGE_ACTIVE, id);
+    }
+
+    // Add activity log (mock array in memory, but we store in localStorage for simplicity)
+    let activityLog = [];
+    function addActivity(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        activityLog.unshift(`[${timestamp}] ${message}`);
+        if (activityLog.length > 8) activityLog.pop();
+        renderActivityFeed();
+        // also persist recent activity optionally
+        localStorage.setItem("refsys_activity", JSON.stringify(activityLog));
+    }
+
+    function loadActivity() {
+        const stored = localStorage.getItem("refsys_activity");
+        if (stored) activityLog = JSON.parse(stored);
+        else activityLog = [];
+        renderActivityFeed();
+    }
+
+    function renderActivityFeed() {
+        const feedDiv = document.getElementById("activityFeed");
+        if (!feedDiv) return;
+        if (!activityLog.length) {
+            feedDiv.innerHTML = '<div style="color:#5e6785;">✨ No recent activity — join or refer someone.</div>';
+            return;
+        }
+        feedDiv.innerHTML = activityLog.map(msg => `<div style="border-bottom:1px solid #1e2230; padding:6px 0;">🔹 ${msg}</div>`).join('');
+    }
+
+    // update UI for active member
+    function refreshDashboard() {
+        const activeId = getActiveId();
+        const members = getMembers();
+        const member = activeId && members[activeId] ? members[activeId] : null;
+
+        if (!member) {
+            document.getElementById("totalEarnings").innerText = "0.00";
+            document.getElementById("l1Earn").innerText = "0.00";
+            document.getElementById("l2Earn").innerText = "0.00";
+            document.getElementById("directCount").innerText = "0";
+            document.getElementById("secondCount").innerText = "0";
+            document.getElementById("activeMemberDisplay").innerHTML = "🔒 Not logged in. Join first.";
+            document.getElementById("referralUrl").value = "Join to generate link";
+            const qrcodeDiv = document.getElementById("qrcode");
+            if(qrcodeDiv) qrcodeDiv.innerHTML = "";
+            return;
+        }
+
+        // display active member
+        document.getElementById("activeMemberDisplay").innerHTML = `<i class="fas fa-user-check"></i> Active: <strong>${escapeHtml(activeId)}</strong>`;
+        // build referral link
+        const baseUrl = window.location.href.split('?')[0];
+        const refLink = `${baseUrl}?ref=${encodeURIComponent(activeId)}`;
+        document.getElementById("referralUrl").value = refLink;
+        // generate QR
+        const qrcodeDiv = document.getElementById("qrcode");
+        qrcodeDiv.innerHTML = "";
+        try {
+            new QRCode(qrcodeDiv, {
+                text: refLink,
+                width: 110,
+                height: 110,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        } catch(e) { console.warn(e); }
+
+        // earnings
+        const total = (member.level1Earned || 0) + (member.level2Earned || 0);
+        document.getElementById("totalEarnings").innerText = total.toFixed(2);
+        document.getElementById("l1Earn").innerText = (member.level1Earned || 0).toFixed(2);
+        document.getElementById("l2Earn").innerText = (member.level2Earned || 0).toFixed(2);
+        const directCount = (member.directRefs || []).length;
+        document.getElementById("directCount").innerText = directCount;
+
+        // count second-level (referrals of direct referrals that exist and are active members)
+        let secondLevelCount = 0;
+        if (member.directRefs) {
+            for (let directId of member.directRefs) {
+                const directMember = members[directId];
+                if (directMember && directMember.directRefs) {
+                    secondLevelCount += directMember.directRefs.length;
+                }
+            }
+        }
+        document.getElementById("secondCount").innerText = secondLevelCount;
+    }
+
+    // Helper: add earnings to member and recursively update ancestor tree (only level1 & level2)
+    // When new member "newMemberId" joins with sponsor "sponsorId":
+    // 1) Sponsor (sponsorId) gets $5 direct reward (level1)
+    // 2) If sponsor has a sponsor (grandSponsor), that grandSponsor gets $2.5 second-level reward.
+    function distributeRewards(newMemberId, sponsorId, members) {
+        if (!sponsorId) return;
+        // Level 1 reward: sponsor gets +$5
+        if (members[sponsorId]) {
+            const sponsor = members[sponsorId];
+            sponsor.level1Earned = (sponsor.level1Earned || 0) + 5;
+            sponsor.totalEarned = (sponsor.totalEarned || 0) + 5;
+            addActivity(`${sponsorId} earned $5 USDT (direct referral: ${newMemberId})`);
+        } else {
+            addActivity(`Sponsor ${sponsorId} not found, reward not distributed`);
+            return;
+        }
+
+        // Level 2 reward: sponsor's sponsor gets +$2.5
+        const grandSponsorId = members[sponsorId]?.sponsorId;
+        if (grandSponsorId && members[grandSponsorId]) {
+            const grand = members[grandSponsorId];
+            grand.level2Earned = (grand.level2Earned || 0) + 2.5;
+            grand.totalEarned = (grand.totalEarned || 0) + 2.5;
+            addActivity(`${grandSponsorId} earned $2.5 USDT (second-level from ${newMemberId} via ${sponsorId})`);
+        } else if(grandSponsorId && !members[grandSponsorId]) {
+            addActivity(`Second-level sponsor ${grandSponsorId} inactive, reward skipped.`);
+        }
+    }
+
+    // join function: requires $10 simulation & unique ID, sponsor optional
+    function joinSystem(memberId, sponsorIdRaw) {
+        const members = getMembers();
+        const activeId = getActiveId(); // not used for join, but we allow join even if logged in as different
+
+        // validation
+        if (!memberId || memberId.trim() === "") {
+            document.getElementById("joinMessage").innerText = "❌ Member ID cannot be empty.";
+            return false;
+        }
+        memberId = memberId.trim();
+        if (members[memberId]) {
+            document.getElementById("joinMessage").innerText = `❌ Member ID "${memberId}" already exists. Choose another.`;
+            return false;
+        }
+
+        let sponsorId = null;
+        if (sponsorIdRaw && sponsorIdRaw.trim() !== "") {
+            sponsorId = sponsorIdRaw.trim();
+            if (!members[sponsorId]) {
+                document.getElementById("joinMessage").innerText = `❌ Sponsor ID "${sponsorId}" does not exist. Join without sponsor or use valid ID.`;
+                return false;
+            }
+            if (sponsorId === memberId) {
+                document.getElementById("joinMessage").innerText = "❌ Cannot refer yourself.";
+                return false;
+            }
+        }
+
+        // Simulate $10 USDT payment (TRC-20) -> for demo we just assume payment done.
+        // In real scenario would call TronLink. For now show confirm
+        const confirmJoin = confirm(`⚡ SIMULATED USDT-TRC20 transaction\n\nMember: ${memberId}\nAmount: 10 USDT\nNetwork: TRC-20\n\nClick OK to complete joining.`);
+        if (!confirmJoin) {
+            document.getElementById("joinMessage").innerText = "❌ Joining cancelled (USDT payment simulation).";
+            return false;
+        }
+
+        // Create new member object
+        const newMember = {
+            sponsorId: sponsorId,
+            directRefs: [],         // array of member IDs directly referred by this member
+            level1Earned: 0,
+            level2Earned: 0,
+            totalEarned: 0,
+            joinTimestamp: Date.now()
+        };
+
+        // add to members
+        members[memberId] = newMember;
+
+        // Update sponsor's directRefs list (if sponsor exists)
+        if (sponsorId && members[sponsorId]) {
+            if (!members[sponsorId].directRefs.includes(memberId)) {
+                members[sponsorId].directRefs.push(memberId);
+            }
+            addActivity(`${memberId} joined using referral of ${sponsorId}`);
+        } else {
+            addActivity(`${memberId} joined (no sponsor, standalone member)`);
+        }
+
+        // Distribute rewards: direct reward $5 to sponsor, $2.5 to upline
+        if (sponsorId) {
+            distributeRewards(memberId, sponsorId, members);
+        }
+
+        // persist
+        saveMembers(members);
+        // auto-login the new member
+        setActiveId(memberId);
+        document.getElementById("joinMessage").innerHTML = `✅ Joined successfully! ${memberId} is now active. Paid $10 USDT (simulated).`;
+        addActivity(`${memberId} joined the network with $10 USDT.`);
+
+        // refresh UI
+        refreshDashboard();
+        return true;
+    }
+
+    // reset demo data (clear all members and active)
+    function resetDemo() {
+        if (confirm("⚠️ Reset all members & earnings? This will delete all referral data permanently.")) {
+            localStorage.setItem(STORAGE_MEMBERS, JSON.stringify({}));
+            localStorage.setItem(STORAGE_ACTIVE, "");
+            activityLog = [];
+            localStorage.setItem("refsys_activity", JSON.stringify([]));
+            addActivity("Demo data reset. System cleared.");
+            refreshDashboard();
+            document.getElementById("joinMessage").innerHTML = "System reset. You can now join as new member.";
+            // clear inputs
+            document.getElementById("memberId").value = "";
+            document.getElementById("sponsorId").value = "";
+        }
+    }
+
+    // copy referral link
+    function copyReferralLink() {
+        const linkInput = document.getElementById("referralUrl");
+        if (!linkInput.value || linkInput.value === "Join to generate link") {
+            alert("Please join first to generate your referral link.");
+            return;
+        }
+        linkInput.select();
+        document.execCommand("copy");
+        alert("✅ Referral link copied to clipboard! Share with friends.");
+    }
+
+    // handle URL param ?ref=... for auto-fill sponsor on page load
+    function handleUrlRef() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const refCode = urlParams.get('ref');
+        if (refCode) {
+            const sponsorField = document.getElementById("sponsorId");
+            if (sponsorField) {
+                sponsorField.value = refCode;
+                addActivity(`Referral param detected: sponsor ${refCode} prefilled.`);
+            }
+        }
+    }
+
+    // also render member selector? but we keep one active session. Allow switching by join again? Better add a logout/switch? provide simple logout
+    function addLogoutButton() {
+        const headerDiv = document.querySelector('.brand');
+        const logoutBtn = document.createElement('button');
+        logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Switch account';
+        logoutBtn.style.background = '#1e243b';
+        logoutBtn.style.border = '1px solid #F5B042';
+        logoutBtn.style.color = '#F5B042';
+        logoutBtn.style.borderRadius = '2rem';
+        logoutBtn.style.padding = '0.4rem 1rem';
+        logoutBtn.style.cursor = 'pointer';
+        logoutBtn.style.fontSize = '0.8rem';
+        logoutBtn.onclick = () => {
+            setActiveId("");
+            refreshDashboard();
+            addActivity("Logged out. Join or re-login by using Join button.");
+            document.getElementById("joinMessage").innerHTML = "Switched out. Use join form to activate another member.";
+        };
+        headerDiv.appendChild(logoutBtn);
+    }
+
+    // escape html
+    function escapeHtml(str) {
+        if(!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // check if there is an active member and update accordingly
+    function initUI() {
+        initStorage();
+        loadActivity();
+        handleUrlRef();
+        refreshDashboard();
+        addLogoutButton();
+    }
+
+    // Event listeners
+    document.addEventListener("DOMContentLoaded", () => {
+        initUI();
+
+        const joinBtn = document.getElementById("joinBtn");
+        joinBtn.addEventListener("click", () => {
+            const memberId = document.getElementById("memberId").value;
+            const sponsorId = document.getElementById("sponsorId").value;
+            joinSystem(memberId, sponsorId);
+        });
+
+        const copyBtn = document.getElementById("copyLinkBtn");
+        copyBtn.addEventListener("click", copyReferralLink);
+
+        const resetBtn = document.getElementById("resetDemoBtn");
+        resetBtn.addEventListener("click", resetDemo);
+    });
+</script>
+</body>
+</html>
